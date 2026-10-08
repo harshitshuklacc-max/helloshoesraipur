@@ -1,0 +1,6 @@
+{
+  "name": "Hello Shoes Raipur",
+  "description": "Official e-commerce storefront for Hello Shoes at Jagannath Chowk, Kota, Raipur. Shop handcrafted leather footwear, performance runners, and court sneakers with live order tracking and instant email updates.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

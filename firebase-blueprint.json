@@ -1,0 +1,495 @@
+{
+  "entities": {
+    "AdminRecord": {
+      "title": "AdminRecord",
+      "description": "Trusted administrator lookup document.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "Administrator user UID.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when admin record was provisioned."
+        }
+      },
+      "required": ["uid", "createdAt"]
+    },
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Non-PII user profile document for Hello Shoes customers.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "Firebase Auth UID of the customer.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Customer display name.",
+          "minLength": 2,
+          "maxLength": 80
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Account registration server timestamp."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Profile update server timestamp."
+        }
+      },
+      "required": ["uid", "displayName", "createdAt", "updatedAt"]
+    },
+    "UserPrivateContact": {
+      "title": "UserPrivateContact",
+      "description": "Isolated PII contact and Raipur delivery address details.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "Owner Firebase Auth UID.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Verified customer email for order notifications.",
+          "minLength": 5,
+          "maxLength": 120,
+          "pattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$"
+        },
+        "phone": {
+          "type": "string",
+          "description": "Customer mobile number for delivery coordination.",
+          "minLength": 10,
+          "maxLength": 20,
+          "pattern": "^[0-9+\\-\\s]+$"
+        },
+        "streetAddress": {
+          "type": "string",
+          "description": "Street and house number.",
+          "minLength": 5,
+          "maxLength": 200
+        },
+        "landmark": {
+          "type": "string",
+          "description": "Nearby landmark (e.g. Near Jagannath Chowk, Kota).",
+          "minLength": 2,
+          "maxLength": 120
+        },
+        "city": {
+          "type": "string",
+          "description": "City name (e.g. Raipur).",
+          "minLength": 2,
+          "maxLength": 60
+        },
+        "postalCode": {
+          "type": "string",
+          "description": "6-digit Indian PIN code.",
+          "minLength": 6,
+          "maxLength": 10,
+          "pattern": "^[0-9]{6}$"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last updated server timestamp."
+        }
+      },
+      "required": [
+        "uid",
+        "email",
+        "phone",
+        "streetAddress",
+        "landmark",
+        "city",
+        "postalCode",
+        "updatedAt"
+      ]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Customer footwear order with real-time fulfillment state.",
+      "type": "object",
+      "properties": {
+        "orderNumber": {
+          "type": "string",
+          "description": "Human-readable Hello Shoes order reference.",
+          "minLength": 6,
+          "maxLength": 32,
+          "pattern": "^HS-[0-9]{4,10}$"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Customer Firebase Auth UID.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "customerName": {
+          "type": "string",
+          "description": "Recipient full name.",
+          "minLength": 2,
+          "maxLength": 80
+        },
+        "deliveryArea": {
+          "type": "string",
+          "description": "Locality and city summary (non-raw PII).",
+          "minLength": 3,
+          "maxLength": 120
+        },
+        "paymentMethod": {
+          "type": "string",
+          "description": "Selected payment method.",
+          "enum": ["upi", "card", "cod"]
+        },
+        "paymentStatus": {
+          "type": "string",
+          "description": "Payment verification status.",
+          "enum": ["paid", "cod_pending", "refunded"]
+        },
+        "status": {
+          "type": "string",
+          "description": "Order fulfillment status.",
+          "enum": [
+            "confirmed",
+            "crafting_inspection",
+            "out_for_delivery",
+            "delivered",
+            "cancelled"
+          ]
+        },
+        "subtotal": {
+          "type": "number",
+          "description": "Order subtotal in INR."
+        },
+        "shippingFee": {
+          "type": "number",
+          "description": "Shipping charge in INR."
+        },
+        "totalAmount": {
+          "type": "number",
+          "description": "Total order amount in INR."
+        },
+        "itemCount": {
+          "type": "integer",
+          "description": "Total quantity of pairs ordered."
+        },
+        "primaryProductTitle": {
+          "type": "string",
+          "description": "Lead product name for summary display.",
+          "minLength": 2,
+          "maxLength": 120
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Order creation server timestamp."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Order status update server timestamp."
+        }
+      },
+      "required": [
+        "orderNumber",
+        "userId",
+        "customerName",
+        "deliveryArea",
+        "paymentMethod",
+        "paymentStatus",
+        "status",
+        "subtotal",
+        "shippingFee",
+        "totalAmount",
+        "itemCount",
+        "primaryProductTitle",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "OrderItem": {
+      "title": "OrderItem",
+      "description": "Individual footwear line item belonging to an Order.",
+      "type": "object",
+      "properties": {
+        "orderId": {
+          "type": "string",
+          "description": "Parent Order document ID.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Owner customer UID.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "productId": {
+          "type": "string",
+          "description": "Catalog footwear SKU ID.",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "productName": {
+          "type": "string",
+          "description": "Footwear model name.",
+          "minLength": 2,
+          "maxLength": 120
+        },
+        "size": {
+          "type": "string",
+          "description": "UK shoe size selected.",
+          "minLength": 2,
+          "maxLength": 16,
+          "pattern": "^UK\\s[0-9]{1,2}(\\.5)?$"
+        },
+        "colorway": {
+          "type": "string",
+          "description": "Selected colorway name.",
+          "minLength": 2,
+          "maxLength": 60
+        },
+        "unitPrice": {
+          "type": "number",
+          "description": "Unit price in INR."
+        },
+        "quantity": {
+          "type": "integer",
+          "description": "Quantity of pairs for this SKU."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Line item creation server timestamp."
+        }
+      },
+      "required": [
+        "orderId",
+        "userId",
+        "productId",
+        "productName",
+        "size",
+        "colorway",
+        "unitPrice",
+        "quantity",
+        "createdAt"
+      ]
+    },
+    "EmailNotification": {
+      "title": "EmailNotification",
+      "description": "Transactional email notification dispatched for order updates.",
+      "type": "object",
+      "properties": {
+        "orderId": {
+          "type": "string",
+          "description": "Associated Order document ID.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "orderNumber": {
+          "type": "string",
+          "description": "Human-readable order code.",
+          "minLength": 6,
+          "maxLength": 32,
+          "pattern": "^HS-[0-9]{4,10}$"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Recipient customer UID.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "recipientName": {
+          "type": "string",
+          "description": "Customer recipient name.",
+          "minLength": 2,
+          "maxLength": 80
+        },
+        "subject": {
+          "type": "string",
+          "description": "Email subject line.",
+          "minLength": 5,
+          "maxLength": 160
+        },
+        "bodyPreview": {
+          "type": "string",
+          "description": "Transactional email body summary.",
+          "minLength": 10,
+          "maxLength": 500
+        },
+        "eventType": {
+          "type": "string",
+          "description": "Triggering order lifecycle event.",
+          "enum": [
+            "order_confirmed",
+            "status_update",
+            "delivery_dispatched",
+            "order_delivered",
+            "order_cancelled"
+          ]
+        },
+        "deliveryStatus": {
+          "type": "string",
+          "description": "Read or sent status of the email notification.",
+          "enum": ["sent", "read"]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Dispatch server timestamp."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last status change server timestamp."
+        }
+      },
+      "required": [
+        "orderId",
+        "orderNumber",
+        "userId",
+        "recipientName",
+        "subject",
+        "bodyPreview",
+        "eventType",
+        "deliveryStatus",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "ProductReview": {
+      "title": "ProductReview",
+      "description": "Verified customer footwear review and rating.",
+      "type": "object",
+      "properties": {
+        "productId": {
+          "type": "string",
+          "description": "Reviewed footwear SKU ID.",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "productName": {
+          "type": "string",
+          "description": "Reviewed footwear model name.",
+          "minLength": 2,
+          "maxLength": 120
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reviewer Firebase Auth UID.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "authorName": {
+          "type": "string",
+          "description": "Reviewer display name.",
+          "minLength": 2,
+          "maxLength": 80
+        },
+        "rating": {
+          "type": "integer",
+          "description": "Star rating from 1 to 5."
+        },
+        "title": {
+          "type": "string",
+          "description": "Review headline.",
+          "minLength": 3,
+          "maxLength": 100
+        },
+        "comment": {
+          "type": "string",
+          "description": "Detailed review body.",
+          "minLength": 10,
+          "maxLength": 600
+        },
+        "sizePurchased": {
+          "type": "string",
+          "description": "UK shoe size reviewed.",
+          "minLength": 2,
+          "maxLength": 16,
+          "pattern": "^UK\\s[0-9]{1,2}(\\.5)?$"
+        },
+        "status": {
+          "type": "string",
+          "description": "Moderation state of the review.",
+          "enum": ["published", "archived"]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Submission server timestamp."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Update server timestamp."
+        }
+      },
+      "required": [
+        "productId",
+        "productName",
+        "userId",
+        "authorName",
+        "rating",
+        "title",
+        "comment",
+        "sizePurchased",
+        "status",
+        "createdAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/admins/{adminId}": {
+      "schema": { "$ref": "#/entities/AdminRecord" },
+      "description": "Trusted administrator lookup collection."
+    },
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Customer public profile documents (non-PII)."
+    },
+    "/users/{userId}/private/{docId}": {
+      "schema": { "$ref": "#/entities/UserPrivateContact" },
+      "description": "Customer isolated PII contact and Raipur delivery address."
+    },
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Customer footwear orders with real-time tracking status."
+    },
+    "/orders/{orderId}/items/{itemId}": {
+      "schema": { "$ref": "#/entities/OrderItem" },
+      "description": "Subcollection of footwear line items belonging to an order."
+    },
+    "/notifications/{notificationId}": {
+      "schema": { "$ref": "#/entities/EmailNotification" },
+      "description": "Transactional email notifications for order lifecycle events."
+    },
+    "/reviews/{reviewId}": {
+      "schema": { "$ref": "#/entities/ProductReview" },
+      "description": "Customer product reviews and ratings."
+    }
+  }
+}
